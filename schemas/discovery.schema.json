@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://byoag.ai/schemas/0.1.0/discovery.schema.json",
+  "title": "BYOAg Well-Known Discovery Document",
+  "type": "object",
+  "required": [
+    "protocolVersions",
+    "issuer",
+    "displayName",
+    "endpoints",
+    "jwksUri",
+    "confirmationModes"
+  ],
+  "properties": {
+    "$schema": { "type": "string" },
+    "protocolVersions": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/semver" }
+    },
+    "issuer": {
+      "type": "string",
+      "format": "uri",
+      "pattern": "^https://"
+    },
+    "displayName": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 120
+    },
+    "endpoints": {
+      "type": "object",
+      "required": ["pairing", "registrations", "engagements", "mcp"],
+      "properties": {
+        "pairing": { "$ref": "#/$defs/httpsUri" },
+        "registrations": { "$ref": "#/$defs/httpsUri" },
+        "engagements": { "$ref": "#/$defs/httpsUri" },
+        "mcp": { "$ref": "#/$defs/httpsUri" }
+      },
+      "additionalProperties": false
+    },
+    "jwksUri": { "$ref": "#/$defs/httpsUri" },
+    "confirmationModes": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "enum": ["code-is-consent", "platform-confirmation"]
+      }
+    },
+    "termsUri": { "$ref": "#/$defs/httpsUri" },
+    "privacyUri": { "$ref": "#/$defs/httpsUri" },
+    "documentationUri": { "$ref": "#/$defs/httpsUri" },
+    "extensions": {
+      "type": "object",
+      "propertyNames": {
+        "pattern": "^[a-z0-9]+(?:[.-][a-z0-9]+)+$"
+      },
+      "additionalProperties": { "type": "object" }
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "semver": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)(?:-[0-9A-Za-z.-]+)?(?:\\+[0-9A-Za-z.-]+)?$"
+    },
+    "httpsUri": {
+      "type": "string",
+      "format": "uri",
+      "pattern": "^https://"
+    }
+  }
+}

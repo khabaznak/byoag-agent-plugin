@@ -1,0 +1,91 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://byoag.ai/schemas/0.1.0/permission.schema.json",
+  "title": "BYOAg Permission",
+  "type": "object",
+  "required": ["id", "operation", "resource", "required", "confirmation"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:[.-][a-z0-9]+)+$"
+    },
+    "operation": {
+      "enum": [
+        "read",
+        "reveal",
+        "create",
+        "modify",
+        "delete",
+        "execute",
+        "transact",
+        "communicate",
+        "delegate",
+        "administer"
+      ]
+    },
+    "resource": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:[.-][a-z0-9]+)*$"
+    },
+    "required": { "type": "boolean" },
+    "purpose": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 280
+    },
+    "dataClasses": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "public",
+          "account",
+          "identity",
+          "contact",
+          "location",
+          "financial",
+          "health",
+          "education",
+          "employment",
+          "communications",
+          "platform-confidential"
+        ]
+      }
+    },
+    "effects": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "external-side-effect",
+          "financial-commitment",
+          "public-disclosure",
+          "identity-or-permission-change",
+          "irreversible-or-hard-to-reverse",
+          "regulated-action"
+        ]
+      }
+    },
+    "constraints": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "confirmation": {
+      "enum": ["none", "once", "each-use", "policy-dependent"]
+    },
+    "dataHandling": {
+      "type": "object",
+      "properties": {
+        "modelVisible": { "type": "boolean" },
+        "localComputation": { "type": "boolean" },
+        "localPersistence": { "type": "boolean" },
+        "externalTransmission": { "type": "boolean" },
+        "crossEngagementTransmission": { "type": "boolean" },
+        "humanDisclosure": { "type": "boolean" },
+        "retentionSeconds": { "type": "integer", "minimum": 0 }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

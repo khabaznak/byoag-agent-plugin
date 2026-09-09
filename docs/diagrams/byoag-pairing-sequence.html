@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>BYOAg discovery, pairing, and engagement sequence</title>
+  <link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500;600&amp;family=Inter:ital,wght@0,400;0,500;0,600;0,700;1,400&amp;display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --paper: #07111f;
+      --paper-2: #0b1626;
+      --ink: #f8fafc;
+      --muted: #93a1b0;
+      --soft: #d8e1ec;
+      --accent: #f59e0b;
+      --link: #38bdf8;
+      --rule: rgba(255, 255, 255, 0.12);
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--paper); color: var(--ink); font-family: Inter, ui-sans-serif, system-ui, sans-serif; }
+    main { width: min(1120px, calc(100% - 32px)); margin: 0 auto; padding: 40px 0 28px; }
+    .eyebrow { margin: 0 0 8px; color: var(--accent); font: 600 12px/1.4 "Geist Mono", monospace; letter-spacing: 0.16em; text-transform: uppercase; }
+    h1 { margin: 0; font-size: clamp(28px, 4vw, 40px); line-height: 1.08; }
+    .subtitle { max-width: 760px; margin: 12px 0 28px; color: var(--muted); font-size: 16px; line-height: 1.6; }
+    figure { margin: 0; overflow-x: auto; }
+    svg { display: block; width: 100%; min-width: 840px; height: auto; }
+    footer { margin-top: 20px; padding-top: 12px; border-top: 1px solid var(--rule); color: var(--muted); font: 400 12px/1.5 "Geist Mono", monospace; }
+  </style>
+</head>
+<body>
+<main>
+  <p class="eyebrow">BYOAg · protocol sequence draft 0.1.0</p>
+  <h1>Pair without putting trust in the prompt</h1>
+  <p class="subtitle">The platform initiates pairing, the exact domain anchors discovery, native clients isolate the code from model context, and the platform issues an engagement-scoped result.</p>
+  <figure>
+    <svg viewBox="0 0 960 760" role="img" aria-labelledby="byoag-pairing-title byoag-pairing-desc">
+      <title id="byoag-pairing-title">BYOAg discovery, pairing, and engagement sequence</title>
+      <desc id="byoag-pairing-desc">Sequence showing a human requesting a code from BYOAg Arena, an agent client discovering the platform through a local connector, protected code redemption with a pairwise key, optional platform confirmation, and activation of a scoped engagement.</desc>
+      <defs>
+        <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+          <polygon points="0 0, 8 3, 0 6" fill="#93a1b0"/>
+        </marker>
+        <marker id="arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+          <polygon points="0 0, 8 3, 0 6" fill="#f59e0b"/>
+        </marker>
+        <marker id="arrow-link" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+          <polygon points="0 0, 8 3, 0 6" fill="#38bdf8"/>
+        </marker>
+      </defs>
+      <rect width="960" height="760" fill="#07111f"/>
+
+      <!-- lifelines -->
+      <g stroke="rgba(248,250,252,0.20)" stroke-width="1" stroke-dasharray="3,3">
+        <line x1="96" y1="84" x2="96" y2="700"/>
+        <line x1="280" y1="84" x2="280" y2="700"/>
+        <line x1="472" y1="84" x2="472" y2="700"/>
+        <line x1="664" y1="84" x2="664" y2="700"/>
+        <line x1="864" y1="84" x2="864" y2="700"/>
+      </g>
+
+      <!-- activation bars -->
+      <rect x="276" y="116" width="8" height="112" fill="rgba(248,250,252,0.06)" stroke="#93a1b0" stroke-width="0.8"/>
+      <rect x="660" y="260" width="8" height="424" fill="rgba(248,250,252,0.06)" stroke="#93a1b0" stroke-width="0.8"/>
+      <rect x="860" y="300" width="8" height="340" fill="rgba(245,158,11,0.08)" stroke="#f59e0b" stroke-width="0.8"/>
+
+      <!-- messages before actors -->
+      <line x1="96" y1="132" x2="272" y2="132" stroke="#93a1b0" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <line x1="272" y1="184" x2="104" y2="184" stroke="#93a1b0" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arrow)"/>
+      <line x1="96" y1="244" x2="464" y2="244" stroke="#93a1b0" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <line x1="472" y1="284" x2="656" y2="284" stroke="#93a1b0" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <line x1="664" y1="324" x2="856" y2="324" stroke="#38bdf8" stroke-width="1.2" marker-end="url(#arrow-link)"/>
+      <line x1="856" y1="372" x2="672" y2="372" stroke="#38bdf8" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arrow-link)"/>
+      <line x1="472" y1="420" x2="656" y2="420" stroke="#93a1b0" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <line x1="664" y1="460" x2="856" y2="460" stroke="#93a1b0" stroke-width="1.2" marker-end="url(#arrow)"/>
+
+      <!-- optional platform-confirmation fragment -->
+      <rect x="252" y="488" width="640" height="112" rx="4" fill="rgba(248,250,252,0.02)" stroke="rgba(248,250,252,0.24)" stroke-width="1"/>
+      <rect x="252" y="488" width="44" height="16" rx="2" fill="#07111f" stroke="rgba(248,250,252,0.24)" stroke-width="1"/>
+      <text x="274" y="500" fill="#93a1b0" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.12em">OPT</text>
+      <text x="308" y="516" fill="#93a1b0" font-size="8" font-family="'Geist Mono', monospace">[platform-confirmation]</text>
+      <line x1="856" y1="540" x2="288" y2="540" stroke="#93a1b0" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <line x1="280" y1="576" x2="856" y2="576" stroke="#93a1b0" stroke-width="1.2" marker-end="url(#arrow)"/>
+
+      <line x1="856" y1="632" x2="672" y2="632" stroke="#f59e0b" stroke-width="1.2" marker-end="url(#arrow-accent)"/>
+      <line x1="656" y1="680" x2="480" y2="680" stroke="#f59e0b" stroke-width="1.2" marker-end="url(#arrow-accent)"/>
+
+      <!-- message labels with visible gaps -->
+      <g font-family="'Geist Mono', monospace" font-size="8" text-anchor="middle">
+        <rect x="132" y="108" width="112" height="16" rx="2" fill="#07111f"/>
+        <text x="188" y="120" fill="#d8e1ec">ADD MY AGENT</text>
+        <rect x="124" y="160" width="120" height="16" rx="2" fill="#07111f"/>
+        <text x="184" y="172" fill="#d8e1ec">DOMAIN + CODE</text>
+        <rect x="220" y="220" width="128" height="16" rx="2" fill="#07111f"/>
+        <text x="284" y="232" fill="#d8e1ec">CONNECT TO ARENA</text>
+        <rect x="516" y="260" width="104" height="16" rx="2" fill="#07111f"/>
+        <text x="568" y="272" fill="#d8e1ec">START DISCOVERY</text>
+        <rect x="704" y="300" width="120" height="16" rx="2" fill="#07111f"/>
+        <text x="764" y="312" fill="#38bdf8">GET /.WELL-KNOWN</text>
+        <rect x="708" y="348" width="112" height="16" rx="2" fill="#07111f"/>
+        <text x="764" y="360" fill="#38bdf8">SIGNED DESCRIPTOR</text>
+        <rect x="508" y="396" width="120" height="16" rx="2" fill="#07111f"/>
+        <text x="568" y="408" fill="#d8e1ec">PROTECTED CODE REF</text>
+        <rect x="708" y="436" width="112" height="16" rx="2" fill="#07111f"/>
+        <text x="764" y="448" fill="#d8e1ec">CODE + PUBLIC KEY</text>
+        <rect x="504" y="516" width="136" height="16" rx="2" fill="#07111f"/>
+        <text x="572" y="528" fill="#d8e1ec">CONFIRM ALPHONSE?</text>
+        <rect x="504" y="552" width="136" height="16" rx="2" fill="#07111f"/>
+        <text x="572" y="564" fill="#d8e1ec">USER CONFIRMED</text>
+        <rect x="700" y="608" width="128" height="16" rx="2" fill="#07111f"/>
+        <text x="764" y="620" fill="#f59e0b">SCOPED REGISTRATION</text>
+        <rect x="508" y="656" width="120" height="16" rx="2" fill="#07111f"/>
+        <text x="568" y="668" fill="#f59e0b">ENGAGEMENT ACTIVE</text>
+      </g>
+
+      <!-- actor boxes -->
+      <g font-family="Inter, sans-serif" text-anchor="middle">
+        <rect x="44" y="24" width="104" height="60" rx="6" fill="#0b1626" stroke="rgba(248,250,252,0.34)"/>
+        <text x="96" y="52" fill="#f8fafc" font-size="12" font-weight="600">Human</text>
+        <text x="96" y="68" fill="#93a1b0" font-size="8" font-family="'Geist Mono', monospace">ACCOUNT OWNER</text>
+
+        <rect x="220" y="24" width="120" height="60" rx="6" fill="#0b1626" stroke="rgba(248,250,252,0.34)"/>
+        <text x="280" y="52" fill="#f8fafc" font-size="12" font-weight="600">Arena UI</text>
+        <text x="280" y="68" fill="#93a1b0" font-size="8" font-family="'Geist Mono', monospace">FIRST-PARTY</text>
+
+        <rect x="412" y="24" width="120" height="60" rx="6" fill="#0b1626" stroke="rgba(248,250,252,0.34)"/>
+        <text x="472" y="52" fill="#f8fafc" font-size="12" font-weight="600">Agent client</text>
+        <text x="472" y="68" fill="#93a1b0" font-size="8" font-family="'Geist Mono', monospace">SECURE INPUT</text>
+
+        <rect x="604" y="24" width="120" height="60" rx="6" fill="rgba(245,158,11,0.12)" stroke="#f59e0b" stroke-width="1.2"/>
+        <text x="664" y="52" fill="#f8fafc" font-size="12" font-weight="700">BYOAg connector</text>
+        <text x="664" y="68" fill="#d8e1ec" font-size="8" font-family="'Geist Mono', monospace">PAIRWISE KEY</text>
+
+        <rect x="804" y="24" width="120" height="60" rx="6" fill="rgba(245,158,11,0.12)" stroke="#f59e0b" stroke-width="1.2"/>
+        <text x="864" y="52" fill="#f8fafc" font-size="12" font-weight="700">Connection bay</text>
+        <text x="864" y="68" fill="#d8e1ec" font-size="8" font-family="'Geist Mono', monospace">ARENA AUTHORITY</text>
+      </g>
+
+      <!-- legend -->
+      <line x1="40" y1="716" x2="920" y2="716" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
+      <text x="40" y="740" fill="#93a1b0" font-size="8" font-family="'Geist Mono', monospace" letter-spacing="0.12em">LEGEND</text>
+      <line x1="120" y1="736" x2="152" y2="736" stroke="#38bdf8" stroke-width="1.2" marker-end="url(#arrow-link)"/>
+      <text x="164" y="740" fill="#d8e1ec" font-size="8" font-family="'Geist Mono', monospace">DISCOVERY</text>
+      <line x1="280" y1="736" x2="312" y2="736" stroke="#93a1b0" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arrow)"/>
+      <text x="324" y="740" fill="#d8e1ec" font-size="8" font-family="'Geist Mono', monospace">RETURN</text>
+      <line x1="420" y1="736" x2="452" y2="736" stroke="#f59e0b" stroke-width="1.2" marker-end="url(#arrow-accent)"/>
+      <text x="464" y="740" fill="#d8e1ec" font-size="8" font-family="'Geist Mono', monospace">SUCCESS</text>
+    </svg>
+  </figure>
+  <footer>Compatibility mode may expose only the one-time code; full conformance keeps all secrets outside model context.</footer>
+</main>
+</body>
+</html>

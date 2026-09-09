@@ -1,0 +1,87 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://byoag.ai/schemas/0.1.0/capability.schema.json",
+  "title": "BYOAg Capability Contract",
+  "type": "object",
+  "required": [
+    "id",
+    "version",
+    "operation",
+    "resource",
+    "effects",
+    "reversible",
+    "permission"
+  ],
+  "properties": {
+    "$schema": { "type": "string" },
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:[.-][a-z0-9]+)+$"
+    },
+    "version": { "$ref": "#/$defs/semver" },
+    "operation": {
+      "enum": [
+        "read",
+        "reveal",
+        "create",
+        "modify",
+        "delete",
+        "execute",
+        "transact",
+        "communicate",
+        "delegate",
+        "administer"
+      ]
+    },
+    "resource": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:[.-][a-z0-9]+)*$"
+    },
+    "summary": { "type": "string", "maxLength": 280 },
+    "effects": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "external-side-effect",
+          "financial-commitment",
+          "public-disclosure",
+          "identity-or-permission-change",
+          "irreversible-or-hard-to-reverse",
+          "regulated-action"
+        ]
+      }
+    },
+    "dataClasses": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "reversible": { "type": "boolean" },
+    "permission": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:[.-][a-z0-9]+)+$"
+    },
+    "canonicalSchemas": {
+      "type": "object",
+      "properties": {
+        "input": { "type": "string", "format": "uri" },
+        "output": { "type": "string", "format": "uri" }
+      },
+      "minProperties": 1,
+      "additionalProperties": false
+    },
+    "confirmation": {
+      "enum": ["none", "once", "each-use", "policy-dependent"]
+    },
+    "idempotencyRequired": { "type": "boolean" },
+    "registry": { "type": "string", "format": "uri" }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "semver": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)(?:-[0-9A-Za-z.-]+)?(?:\\+[0-9A-Za-z.-]+)?$"
+    }
+  }
+}

@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://byoag.ai/schemas/0.1.0/delegation.schema.json",
+  "title": "BYOAg Delegation Grant",
+  "type": "object",
+  "required": [
+    "grantId",
+    "issuer",
+    "registrationId",
+    "engagementId",
+    "role",
+    "issuedAt",
+    "expiresAt",
+    "permissions",
+    "signature"
+  ],
+  "properties": {
+    "$schema": { "type": "string" },
+    "grantId": { "$ref": "#/$defs/id" },
+    "issuer": {
+      "type": "string",
+      "format": "uri",
+      "pattern": "^https://"
+    },
+    "registrationId": { "$ref": "#/$defs/id" },
+    "engagementId": { "$ref": "#/$defs/id" },
+    "pairwiseAgentId": { "$ref": "#/$defs/id" },
+    "installationId": { "$ref": "#/$defs/id" },
+    "role": {
+      "type": "object",
+      "required": ["id", "displayName"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "displayName": { "type": "string", "minLength": 1, "maxLength": 120 }
+      },
+      "additionalProperties": false
+    },
+    "issuedAt": { "type": "string", "format": "date-time" },
+    "expiresAt": { "type": "string", "format": "date-time" },
+    "permissions": {
+      "type": "array",
+      "items": {
+        "$ref": "permission.schema.json"
+      }
+    },
+    "signature": {
+      "type": "object",
+      "required": ["alg", "kid", "value"],
+      "properties": {
+        "alg": { "type": "string", "minLength": 1 },
+        "kid": { "type": "string", "minLength": 1 },
+        "value": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 255
+    }
+  }
+}

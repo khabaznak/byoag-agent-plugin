@@ -22,6 +22,9 @@ The repository owner is the creator and steward of the BYOAg pattern, website, a
 - `mcp.json` defines any MCP server configuration exposed by the plugin.
 - `skills/byoag/SKILL.md` is the entry point for the BYOAG skill.
 - `skills/byoag/references/` contains focused reference material used by the skill.
+- `docs/` contains the protocol architecture, threat model, extension proposal, implementation plan, and diagrams.
+- `schemas/` contains independently versioned draft BYOAg JSON Schemas.
+- `.diagram-design` selects the BYOAg visual profile for project diagrams.
 - `README.md` explains installation, configuration, and use.
 
 ## Editing guidance
@@ -32,6 +35,8 @@ The repository owner is the creator and steward of the BYOAg pattern, website, a
 - Use the Agent Plugins 1.0.0 schema URLs in the root JSON files. The manifest must declare its `$schema` and a valid lowercase name; `mcp.json`, when present, may contain only `$schema` and `mcpServers` at its top level.
 - Add new skill-specific material under `skills/byoag/`; do not place it at the repository root.
 - Keep `skills/byoag/SKILL.md` directly under the skill directory. Clients discover only immediate children of `skills/`, not nested skills.
+- Keep protocol-level design in `docs/` and machine contracts in `schemas/`; reflect runtime-critical invariants concisely in the skill reference.
+- Treat every protocol, profile, capability, and remote skill bundle as independently SemVer-versioned.
 - Update `README.md` whenever installation, configuration, or behavior changes.
 - Do not commit credentials, access tokens, generated artifacts, or local environment files.
 

@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>BYOAg system and trust boundaries</title>
+  <link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500;600&amp;family=Inter:ital,wght@0,400;0,500;0,600;0,700;1,400&amp;display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --paper: #07111f;
+      --paper-2: #0b1626;
+      --ink: #f8fafc;
+      --muted: #93a1b0;
+      --soft: #d8e1ec;
+      --accent: #f59e0b;
+      --accent-tint: rgba(245, 158, 11, 0.12);
+      --link: #38bdf8;
+      --rule: rgba(255, 255, 255, 0.12);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+    }
+    main { width: min(1120px, calc(100% - 32px)); margin: 0 auto; padding: 40px 0 28px; }
+    .eyebrow { margin: 0 0 8px; color: var(--accent); font: 600 12px/1.4 "Geist Mono", monospace; letter-spacing: 0.16em; text-transform: uppercase; }
+    h1 { margin: 0; font-size: clamp(28px, 4vw, 40px); line-height: 1.08; }
+    .subtitle { max-width: 760px; margin: 12px 0 28px; color: var(--muted); font-size: 16px; line-height: 1.6; }
+    figure { margin: 0; overflow-x: auto; }
+    svg { display: block; width: 100%; min-width: 840px; height: auto; }
+    footer { margin-top: 20px; padding-top: 12px; border-top: 1px solid var(--rule); color: var(--muted); font: 400 12px/1.5 "Geist Mono", monospace; }
+  </style>
+</head>
+<body>
+<main>
+  <p class="eyebrow">BYOAg · architecture draft 0.1.0</p>
+  <h1>One bounded road into a platform</h1>
+  <p class="subtitle">A universal connector adds an isolated engagement to an existing personal agent. Identity, policy, tools, skills, and audit remain controlled at explicit trust boundaries.</p>
+  <figure>
+    <svg viewBox="0 0 960 560" role="img" aria-labelledby="byoag-architecture-title byoag-architecture-desc">
+      <title id="byoag-architecture-title">BYOAg system and trust boundaries</title>
+      <desc id="byoag-architecture-desc">Architecture showing a human and personal agent connecting through a secure BYOAg connector to a platform connection bay, policy service, isolated engagement, role tools and skills, and audit log, while global agent mutation is blocked.</desc>
+      <defs>
+        <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+          <polygon points="0 0, 8 3, 0 6" fill="#93a1b0"/>
+        </marker>
+        <marker id="arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+          <polygon points="0 0, 8 3, 0 6" fill="#f59e0b"/>
+        </marker>
+        <marker id="arrow-link" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+          <polygon points="0 0, 8 3, 0 6" fill="#38bdf8"/>
+        </marker>
+      </defs>
+      <rect width="960" height="560" fill="#07111f"/>
+
+      <!-- trust zones -->
+      <rect x="40" y="40" width="352" height="400" rx="8" fill="rgba(248,250,252,0.02)" stroke="rgba(248,250,252,0.18)" stroke-width="1" stroke-dasharray="4,4"/>
+      <rect x="56" y="44" width="132" height="16" rx="2" fill="#07111f"/>
+      <text x="122" y="56" fill="#93a1b0" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.12em">USER TRUST ZONE</text>
+
+      <rect x="520" y="40" width="400" height="460" rx="8" fill="rgba(245,158,11,0.03)" stroke="rgba(245,158,11,0.48)" stroke-width="1" stroke-dasharray="4,4"/>
+      <rect x="536" y="44" width="148" height="16" rx="2" fill="#07111f"/>
+      <text x="610" y="56" fill="#f59e0b" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.12em">PLATFORM AUTHORITY</text>
+
+      <!-- approved paths, drawn before nodes -->
+      <line x1="192" y1="136" x2="236" y2="136" stroke="#93a1b0" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <line x1="296" y1="172" x2="296" y2="240" stroke="#93a1b0" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <path d="M356 284 H448 Q456 284 456 276 V144 Q456 136 464 136 H552" fill="none" stroke="#38bdf8" stroke-width="1.2" marker-end="url(#arrow-link)"/>
+      <line x1="688" y1="136" x2="736" y2="136" stroke="#93a1b0" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <path d="M804 172 V200 Q804 208 796 208 H628 Q620 208 620 216 V240" fill="none" stroke="#f59e0b" stroke-width="1.2" marker-end="url(#arrow-accent)"/>
+      <line x1="688" y1="284" x2="736" y2="284" stroke="#38bdf8" stroke-width="1.2" marker-end="url(#arrow-link)"/>
+      <path d="M620 328 V348 Q620 356 628 356 H704 Q712 356 712 364 V392" fill="none" stroke="#93a1b0" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arrow)"/>
+
+      <!-- blocked bypass -->
+      <path d="M804 328 V452 Q804 460 796 460 H408" fill="none" stroke="#f59e0b" stroke-width="1" stroke-dasharray="5,4"/>
+      <line x1="400" y1="452" x2="416" y2="468" stroke="#f59e0b" stroke-width="1.2"/>
+      <line x1="416" y1="452" x2="400" y2="468" stroke="#f59e0b" stroke-width="1.2"/>
+
+      <!-- path labels with masks -->
+      <rect x="396" y="244" width="120" height="16" rx="2" fill="#07111f"/>
+      <text x="456" y="256" fill="#38bdf8" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.05em">VERIFIED HTTPS</text>
+      <rect x="652" y="184" width="136" height="16" rx="2" fill="#07111f"/>
+      <text x="720" y="196" fill="#f59e0b" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.05em">SCOPED GRANT</text>
+      <rect x="696" y="260" width="32" height="16" rx="2" fill="#07111f"/>
+      <text x="712" y="272" fill="#38bdf8" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.05em">MCP</text>
+      <rect x="648" y="332" width="56" height="16" rx="2" fill="#07111f"/>
+      <text x="676" y="344" fill="#93a1b0" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.05em">AUDIT</text>
+      <rect x="496" y="436" width="152" height="16" rx="2" fill="#07111f"/>
+      <text x="572" y="448" fill="#f59e0b" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.05em">NO GLOBAL MUTATION</text>
+
+      <!-- nodes -->
+      <g font-family="Inter, sans-serif" text-anchor="middle">
+        <rect x="72" y="100" width="120" height="72" rx="6" fill="#0b1626" stroke="rgba(248,250,252,0.34)"/>
+        <text x="132" y="132" fill="#f8fafc" font-size="12" font-weight="600">Human</text>
+        <text x="132" y="152" fill="#93a1b0" font-size="8" font-family="'Geist Mono', monospace">ACCOUNT OWNER</text>
+
+        <rect x="236" y="100" width="120" height="72" rx="6" fill="#0b1626" stroke="rgba(248,250,252,0.34)"/>
+        <text x="296" y="132" fill="#f8fafc" font-size="12" font-weight="600">Agent client</text>
+        <text x="296" y="152" fill="#93a1b0" font-size="8" font-family="'Geist Mono', monospace">EXISTING CONFIG</text>
+
+        <rect x="236" y="240" width="120" height="88" rx="6" fill="rgba(245,158,11,0.12)" stroke="#f59e0b" stroke-width="1.2"/>
+        <text x="296" y="276" fill="#f8fafc" font-size="12" font-weight="700">BYOAg connector</text>
+        <text x="296" y="296" fill="#d8e1ec" font-size="8" font-family="'Geist Mono', monospace">PAIRWISE ID · VAULT</text>
+
+        <rect x="552" y="100" width="136" height="72" rx="6" fill="rgba(245,158,11,0.12)" stroke="#f59e0b" stroke-width="1.2"/>
+        <text x="620" y="132" fill="#f8fafc" font-size="12" font-weight="700">Connection bay</text>
+        <text x="620" y="152" fill="#d8e1ec" font-size="8" font-family="'Geist Mono', monospace">PAIR · VERIFY</text>
+
+        <rect x="736" y="100" width="136" height="72" rx="6" fill="#0b1626" stroke="rgba(248,250,252,0.34)"/>
+        <text x="804" y="132" fill="#f8fafc" font-size="12" font-weight="600">Identity &amp; policy</text>
+        <text x="804" y="152" fill="#93a1b0" font-size="8" font-family="'Geist Mono', monospace">ROLE · DELEGATION</text>
+
+        <rect x="552" y="240" width="136" height="88" rx="6" fill="rgba(248,250,252,0.04)" stroke="#93a1b0"/>
+        <text x="620" y="276" fill="#f8fafc" font-size="12" font-weight="600">Engagement</text>
+        <text x="620" y="296" fill="#93a1b0" font-size="8" font-family="'Geist Mono', monospace">ISOLATED CONTEXT</text>
+
+        <rect x="736" y="240" width="136" height="88" rx="6" fill="#0b1626" stroke="#38bdf8"/>
+        <text x="804" y="276" fill="#f8fafc" font-size="12" font-weight="600">Tools &amp; skills</text>
+        <text x="804" y="296" fill="#38bdf8" font-size="8" font-family="'Geist Mono', monospace">MCP · SIGNED DOCS</text>
+
+        <rect x="644" y="392" width="136" height="64" rx="6" fill="rgba(248,250,252,0.04)" stroke="#93a1b0"/>
+        <text x="712" y="420" fill="#f8fafc" font-size="12" font-weight="600">Audit record</text>
+        <text x="712" y="440" fill="#93a1b0" font-size="8" font-family="'Geist Mono', monospace">HUMAN + AGENT</text>
+      </g>
+
+      <!-- legend -->
+      <line x1="40" y1="516" x2="920" y2="516" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
+      <text x="40" y="540" fill="#93a1b0" font-size="8" font-family="'Geist Mono', monospace" letter-spacing="0.12em">LEGEND</text>
+      <line x1="120" y1="536" x2="152" y2="536" stroke="#38bdf8" stroke-width="1.2" marker-end="url(#arrow-link)"/>
+      <text x="164" y="540" fill="#d8e1ec" font-size="8" font-family="'Geist Mono', monospace">VERIFIED PATH</text>
+      <line x1="300" y1="536" x2="332" y2="536" stroke="#93a1b0" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arrow)"/>
+      <text x="344" y="540" fill="#d8e1ec" font-size="8" font-family="'Geist Mono', monospace">AUDIT / RETURN</text>
+      <line x1="508" y1="536" x2="540" y2="536" stroke="#f59e0b" stroke-width="1" stroke-dasharray="5,4"/>
+      <text x="552" y="540" fill="#d8e1ec" font-size="8" font-family="'Geist Mono', monospace">BLOCKED BYPASS</text>
+      <rect x="700" y="528" width="28" height="16" rx="4" fill="rgba(245,158,11,0.12)" stroke="#f59e0b"/>
+      <text x="740" y="540" fill="#d8e1ec" font-size="8" font-family="'Geist Mono', monospace">PRIVILEGED GATE</text>
+    </svg>
+  </figure>
+  <footer>BYOAg · Bring Your Own Agent · Reference platform: BYOAg Arena</footer>
+</main>
+</body>
+</html>

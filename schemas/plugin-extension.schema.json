@@ -1,0 +1,69 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://byoag.ai/schemas/0.1.0/plugin-extension.schema.json",
+  "title": "BYOAg Agent Plugins Extension Manifest",
+  "type": "object",
+  "required": ["specVersion", "mode", "discovery", "security"],
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "specVersion": {
+      "$ref": "#/$defs/semver"
+    },
+    "mode": {
+      "enum": ["bootstrap", "native"]
+    },
+    "connectorMcpServer": {
+      "type": "string",
+      "minLength": 1
+    },
+    "discovery": {
+      "type": "object",
+      "required": ["wellKnownPath", "httpsRequired"],
+      "properties": {
+        "wellKnownPath": {
+          "const": "/.well-known/byoag.json"
+        },
+        "httpsRequired": {
+          "const": true
+        },
+        "loopbackHttpAllowed": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "security": {
+      "type": "object",
+      "required": [
+        "pairwiseIdentity",
+        "modelIsolatedSecrets",
+        "declarativeRemoteSkills",
+        "nonInterference"
+      ],
+      "properties": {
+        "pairwiseIdentity": { "const": true },
+        "modelIsolatedSecrets": { "type": "boolean" },
+        "declarativeRemoteSkills": { "const": true },
+        "nonInterference": { "const": true }
+      },
+      "additionalProperties": false
+    },
+    "schemas": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string",
+        "pattern": "^\\./"
+      }
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "semver": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)(?:-[0-9A-Za-z.-]+)?(?:\\+[0-9A-Za-z.-]+)?$"
+    }
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "byoag",
+  "version": "0.1.0",
+  "description": "Experimental universal bootstrap for connecting personal agents to BYOAg-enabled platforms.",
+  "author": {
+    "name": "BYOAg",
+    "url": "https://byoag.ai/"
+  },
+  "homepage": "https://byoag.ai/",
+  "repository": "https://github.com/khabaznak/byoag-agent-plugin",
+  "keywords": [
+    "agent-plugin",
+    "byoag",
+    "mcp",
+    "agent-skills",
+    "delegation"
+  ]
+}

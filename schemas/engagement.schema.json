@@ -1,0 +1,109 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://byoag.ai/schemas/0.1.0/engagement.schema.json",
+  "title": "BYOAg Engagement Descriptor",
+  "type": "object",
+  "required": [
+    "engagementId",
+    "issuer",
+    "registrationId",
+    "context",
+    "role",
+    "delegation",
+    "capabilities",
+    "skills",
+    "issuedAt",
+    "expiresAt",
+    "signature"
+  ],
+  "properties": {
+    "$schema": { "type": "string" },
+    "engagementId": { "$ref": "#/$defs/id" },
+    "issuer": { "$ref": "#/$defs/httpsUri" },
+    "registrationId": { "$ref": "#/$defs/id" },
+    "context": {
+      "type": "object",
+      "required": ["id", "type", "displayName"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "type": { "$ref": "#/$defs/namespaced" },
+        "displayName": { "type": "string", "minLength": 1, "maxLength": 120 }
+      },
+      "additionalProperties": false
+    },
+    "role": {
+      "type": "object",
+      "required": ["id", "displayName"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "displayName": { "type": "string", "minLength": 1, "maxLength": 120 }
+      },
+      "additionalProperties": false
+    },
+    "delegation": {
+      "$ref": "delegation.schema.json"
+    },
+    "capabilities": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["tool", "capability", "version", "schemaCompatibility"],
+        "properties": {
+          "tool": { "type": "string", "minLength": 1 },
+          "capability": { "$ref": "#/$defs/namespaced" },
+          "version": { "$ref": "#/$defs/semver" },
+          "schemaCompatibility": {
+            "enum": ["canonical", "adapted", "semantic-only"]
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "skills": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "version", "manifestUri", "digest"],
+        "properties": {
+          "id": { "$ref": "#/$defs/namespaced" },
+          "version": { "$ref": "#/$defs/semver" },
+          "manifestUri": { "$ref": "#/$defs/httpsUri" },
+          "digest": {
+            "type": "string",
+            "pattern": "^sha256:[A-Fa-f0-9]{64}$"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "issuedAt": { "type": "string", "format": "date-time" },
+    "expiresAt": { "type": "string", "format": "date-time" },
+    "signature": {
+      "type": "object",
+      "required": ["alg", "kid", "value"],
+      "properties": {
+        "alg": { "type": "string", "minLength": 1 },
+        "kid": { "type": "string", "minLength": 1 },
+        "value": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "id": { "type": "string", "minLength": 1, "maxLength": 255 },
+    "namespaced": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:[.-][a-z0-9]+)+$"
+    },
+    "semver": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)(?:-[0-9A-Za-z.-]+)?(?:\\+[0-9A-Za-z.-]+)?$"
+    },
+    "httpsUri": {
+      "type": "string",
+      "format": "uri",
+      "pattern": "^https://"
+    }
+  }
+}
