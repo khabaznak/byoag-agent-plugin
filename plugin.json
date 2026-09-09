@@ -15,5 +15,10 @@
     "mcp",
     "agent-skills",
     "delegation"
-  ]
+  ],
+  "extensions": {
+    "ai.byoag": {
+      "manifest": "./byoag.json"
+    }
+  }
 }

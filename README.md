@@ -8,12 +8,42 @@ BYOAg Arena is the first reference platform for the protocol and implementation.
 
 ## Current status
 
-This repository is at design baseline `0.1.0`. It contains architecture, protocol flows, a threat model, draft schemas, and a truthful bootstrap skill scaffold. It does not yet contain a working connector and must not be presented as production-ready or as a finalized standard.
+This repository now contains an experimental generic connector at `0.1.0`. It implements domain-bound discovery, pairing, local pairwise identities, registration listing, engagement retrieval, and disconnect over a local stdio MCP server. It remains a development implementation: the protocol is not finalized, the compatibility vault is not an OS-backed secure store, and proof of possession and signed discovery are not yet implemented.
+
+## Build and test
+
+The connector requires Node.js 20 or newer. From a source checkout:
+
+```bash
+npm install
+npm test
+npm run build
+```
+
+`mcp.json` launches `node ${PLUGIN_ROOT}/dist/src/index.js` and stores connector state beneath `${PLUGIN_DATA}/byoag`. A source checkout must therefore be built before it is loaded as an Agent Plugin. Packaged distribution automation is not yet included.
+
+The MCP server exposes:
+
+- `byoag_discover`
+- `byoag_begin_pairing`
+- `byoag_complete_pairing`
+- `byoag_list_registrations`
+- `byoag_list_engagements`
+- `byoag_disconnect`
+
+Compatibility mode can receive a one-time pairing code through the model-visible tool argument. For terminal-based protected entry, build the project and run:
+
+```bash
+BYOAG_DATA_DIR=/the/same/plugin/data/directory node dist/src/secret-cli.js
+```
+
+The command reads without echo and returns an opaque, single-use reference for `byoag_complete_pairing`. Full-conformance clients should provide their own protected input and secure-vault adapter.
 
 ## Design
 
 - [Architecture](docs/architecture.md)
 - [Protocol flows](docs/protocol-flows.md)
+- [Connector HTTP binding](docs/connector-http-binding.md)
 - [Permissions and capabilities](docs/permissions-and-capabilities.md)
 - [Security and privacy](docs/security.md)
 - [`ai.byoag` extension proposal](docs/byoag-extension.md)
@@ -26,7 +56,11 @@ This repository is at design baseline `0.1.0`. It contains architecture, protoco
 
 ```text
 plugin.json                         Agent Plugins 1.0.0 manifest
-mcp.json                            MCP configuration; empty until connector implementation
+mcp.json                            Local stdio connector configuration
+byoag.json                          Native ai.byoag bootstrap extension manifest
+package.json                        Connector dependencies and build commands
+src/                                Generic connector and stdio MCP implementation
+tests/                              Protocol, storage, and MCP integration tests
 skills/byoag/SKILL.md               Universal bootstrap skill
 skills/byoag/references/protocol.md Runtime protocol invariants
 docs/                               Design and implementation artifacts

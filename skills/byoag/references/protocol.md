@@ -35,6 +35,7 @@ Registration, engagement, and credential lifetimes are platform-defined. Permiss
 
 - [Architecture](../../../docs/architecture.md)
 - [Protocol flows](../../../docs/protocol-flows.md)
+- [Implemented connector HTTP binding](../../../docs/connector-http-binding.md)
 - [Permissions and capabilities](../../../docs/permissions-and-capabilities.md)
 - [Security](../../../docs/security.md)
 - [`ai.byoag` extension](../../../docs/byoag-extension.md)

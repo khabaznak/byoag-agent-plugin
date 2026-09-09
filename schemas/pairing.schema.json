@@ -1,0 +1,131 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://byoag.ai/schemas/0.1.0/pairing.schema.json",
+  "title": "BYOAg Pairing Exchange",
+  "oneOf": [
+    { "$ref": "#/$defs/beginRequest" },
+    { "$ref": "#/$defs/completeRequest" },
+    { "$ref": "#/$defs/statusRequest" },
+    { "$ref": "#/$defs/pairingResponse" }
+  ],
+  "$defs": {
+    "beginRequest": {
+      "type": "object",
+      "required": ["action", "protocolVersion", "agent", "client"],
+      "properties": {
+        "action": { "const": "begin" },
+        "protocolVersion": { "const": "0.1.0" },
+        "agent": { "$ref": "#/$defs/agent" },
+        "client": { "$ref": "#/$defs/client" }
+      },
+      "additionalProperties": false
+    },
+    "completeRequest": {
+      "type": "object",
+      "required": ["action", "protocolVersion", "connectionId", "pairingCode", "agent", "installation", "client"],
+      "properties": {
+        "action": { "const": "complete" },
+        "protocolVersion": { "const": "0.1.0" },
+        "connectionId": { "$ref": "#/$defs/id" },
+        "pairingCode": { "type": "string", "minLength": 1, "maxLength": 256 },
+        "agent": { "$ref": "#/$defs/agentWithKey" },
+        "installation": { "$ref": "#/$defs/installation" },
+        "client": { "$ref": "#/$defs/client" }
+      },
+      "additionalProperties": false
+    },
+    "statusRequest": {
+      "type": "object",
+      "required": ["action", "protocolVersion", "connectionId", "client"],
+      "properties": {
+        "action": { "const": "status" },
+        "protocolVersion": { "const": "0.1.0" },
+        "connectionId": { "$ref": "#/$defs/id" },
+        "client": { "$ref": "#/$defs/client" }
+      },
+      "additionalProperties": false
+    },
+    "pairingResponse": {
+      "type": "object",
+      "required": ["status", "connectionId"],
+      "properties": {
+        "status": { "enum": ["pairing-ready", "confirmation-required", "registered", "denied"] },
+        "connectionId": { "$ref": "#/$defs/id" },
+        "expiresAt": { "type": "string", "format": "date-time" },
+        "registrationId": { "$ref": "#/$defs/id" },
+        "verificationUri": { "$ref": "#/$defs/httpsUri" },
+        "message": { "type": "string", "maxLength": 500 },
+        "credential": {
+          "type": "object",
+          "required": ["scheme", "value"],
+          "properties": {
+            "scheme": { "enum": ["bearer"] },
+            "value": { "type": "string", "minLength": 1 },
+            "expiresAt": { "type": "string", "format": "date-time" }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "agent": {
+      "type": "object",
+      "required": ["displayName"],
+      "properties": {
+        "displayName": { "type": "string", "minLength": 1, "maxLength": 120 }
+      },
+      "additionalProperties": false
+    },
+    "agentWithKey": {
+      "type": "object",
+      "required": ["displayName", "pairwiseId", "publicKey"],
+      "properties": {
+        "displayName": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "pairwiseId": { "$ref": "#/$defs/id" },
+        "publicKey": { "$ref": "#/$defs/publicJwk" }
+      },
+      "additionalProperties": false
+    },
+    "installation": {
+      "type": "object",
+      "required": ["id", "publicKey"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "publicKey": { "$ref": "#/$defs/publicJwk" }
+      },
+      "additionalProperties": false
+    },
+    "client": {
+      "type": "object",
+      "required": ["name", "version", "conformance", "supportedProtocolVersions"],
+      "properties": {
+        "name": { "const": "byoag-connector" },
+        "version": { "$ref": "#/$defs/semver" },
+        "conformance": { "enum": ["compatibility", "native"] },
+        "supportedProtocolVersions": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/semver" }
+        }
+      },
+      "additionalProperties": false
+    },
+    "publicJwk": {
+      "type": "object",
+      "required": ["kty", "crv", "x"],
+      "properties": {
+        "kty": { "const": "OKP" },
+        "crv": { "const": "Ed25519" },
+        "x": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": true
+    },
+    "id": { "type": "string", "minLength": 1, "maxLength": 255 },
+    "httpsUri": { "type": "string", "format": "uri", "pattern": "^(?:https://|http://(?:localhost|127\\.0\\.0\\.1|\\[::1\\])(?::[0-9]+)?(?:/|$))" },
+    "semver": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)(?:-[0-9A-Za-z.-]+)?(?:\\+[0-9A-Za-z.-]+)?$"
+    }
+  }
+}

@@ -1,4 +1,15 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/mcp.schema.json",
-  "mcpServers": {}
+  "mcpServers": {
+    "byoag": {
+      "type": "stdio",
+      "command": "node",
+      "args": ["${PLUGIN_ROOT}/dist/src/index.js"],
+      "env": {
+        "BYOAG_DATA_DIR": "${PLUGIN_DATA}/byoag",
+        "BYOAG_PLUGIN_ROOT": "${PLUGIN_ROOT}"
+      },
+      "cwd": "${PLUGIN_ROOT}"
+    }
+  }
 }

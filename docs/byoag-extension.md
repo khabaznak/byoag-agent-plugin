@@ -54,7 +54,7 @@ The extension manifest is expected to declare:
 - Client conformance mode.
 - References to local schemas or policy files contained within the plugin.
 
-The initial JSON Schema is [plugin-extension.schema.json](../schemas/plugin-extension.schema.json). The package will add a concrete root `byoag.json` only when the connector contract is implemented, avoiding a manifest that advertises unavailable runtime behavior.
+The initial JSON Schema is [plugin-extension.schema.json](../schemas/plugin-extension.schema.json). The package now includes a concrete root `byoag.json` because the connector contract and stdio runtime are implemented. Its `modelIsolatedSecrets: false` declaration truthfully identifies the bundled file vault as compatibility mode; a native client must provide protected input and OS-backed storage before claiming full conformance.
 
 ## Compatibility invariant
 

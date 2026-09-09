@@ -23,7 +23,9 @@ Exit criteria:
 
 ## Phase 1 — bootstrap connector skeleton
 
-Build a local stdio MCP connector and reference it from `mcp.json`. TypeScript on a current Node.js LTS release is the tentative implementation choice because it is portable and has mature MCP and JSON Schema tooling; confirm against the existing BYOAg Arena stack before committing.
+Status: experimental connector implemented; security hardening and distribution remain open.
+
+Build a local stdio MCP connector and reference it from `mcp.json`. The reference connector uses TypeScript, Node.js 20+, MCP TypeScript SDK v2, and JSON Schema validation. The choice must still be checked against the BYOAg Arena stack before a production distribution format is selected.
 
 Initial connector tools:
 
@@ -41,6 +43,8 @@ Exit criteria:
 - Discovery is domain-bound and schema-validated.
 - Credentials are isolated from model-visible responses.
 - Connector shutdown and removal do not change unrelated agent configuration.
+
+Implemented tests cover the tool surface, strict discovery, pairwise registration material, credential redaction, protected-reference consumption, private-destination blocking, and scoped disconnect. Signed discovery, HTTP proof of possession, OS-backed vault integration, packaged distribution, and a live reference-host test remain before Phase 1 is complete.
 
 ## Phase 2 — BYOAg Arena connection bay
 

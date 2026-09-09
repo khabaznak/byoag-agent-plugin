@@ -1,0 +1,26 @@
+{
+  "$schema": "./schemas/plugin-extension.schema.json",
+  "specVersion": "0.1.0",
+  "mode": "bootstrap",
+  "connectorMcpServer": "byoag",
+  "discovery": {
+    "wellKnownPath": "/.well-known/byoag.json",
+    "httpsRequired": true,
+    "loopbackHttpAllowed": false
+  },
+  "security": {
+    "pairwiseIdentity": true,
+    "modelIsolatedSecrets": false,
+    "declarativeRemoteSkills": true,
+    "nonInterference": true
+  },
+  "schemas": {
+    "discovery": "./schemas/discovery.schema.json",
+    "pairing": "./schemas/pairing.schema.json",
+    "engagement": "./schemas/engagement.schema.json",
+    "delegation": "./schemas/delegation.schema.json",
+    "permission": "./schemas/permission.schema.json",
+    "capability": "./schemas/capability.schema.json",
+    "skillBundle": "./schemas/skill-bundle.schema.json"
+  }
+}

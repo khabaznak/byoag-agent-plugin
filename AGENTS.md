@@ -20,6 +20,9 @@ The repository owner is the creator and steward of the BYOAg pattern, website, a
 
 - `plugin.json` contains the plugin metadata and declares bundled capabilities.
 - `mcp.json` defines any MCP server configuration exposed by the plugin.
+- `byoag.json` declares the draft `ai.byoag` bootstrap extension.
+- `src/` contains the generic connector and MCP runtime.
+- `tests/` contains protocol, storage, and MCP integration coverage.
 - `skills/byoag/SKILL.md` is the entry point for the BYOAG skill.
 - `skills/byoag/references/` contains focused reference material used by the skill.
 - `docs/` contains the protocol architecture, threat model, extension proposal, implementation plan, and diagrams.

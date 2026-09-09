@@ -7,18 +7,20 @@ description: Connect a user's existing agent to a BYOAg-enabled platform through
 
 Use BYOAg as a temporary, platform-scoped extension of the user's existing agent. The platform owns its accounts, roles, permissions, data, tools, and enforcement. The user owns their agent and may narrow the platform's proposed delegation.
 
-This package is currently a design scaffold. Do not claim to establish a live connection until the BYOAg connector MCP server is present and exposes the required operations.
+This package includes an experimental generic connector. It can establish a live connection only when its local MCP server is built, running, and the target platform implements the BYOAg 0.1.0 HTTP binding. Do not present the draft protocol or compatibility vault as production-ready or fully conformant.
 
 ## Connection workflow
 
 1. Require the exact platform domain for first-time discovery. Resolve only `https://<domain>/.well-known/byoag.json`; brand-name search is not a trust anchor.
-2. Verify the discovery document, issuer, supported version, endpoints, and signing keys before pairing.
+2. Verify the discovery document, issuer, supported version, and endpoints before pairing. The current compatibility connector validates the advertised JWKS location but does not yet verify a signed descriptor; disclose that limitation when security posture matters.
 3. Prefer model-isolated secret entry. If the client supports compatibility mode only, explain that a one-time code may enter model context before asking the user to provide it.
 4. Use a new pairwise agent identity for each platform. Do not disclose a shared identity without explicit user consent.
 5. Let the platform present its role and permission controls. The user may narrow but never expand the platform grant.
 6. Activate tools and declarative skills only within the named engagement. Keep simultaneous engagements isolated.
 7. Treat tool availability as discovery, not authorization; the platform must authorize every invocation.
 8. On disconnect or revocation, remove only the affected BYOAg overlay. Leave all pre-existing agent tools, skills, memory, and configuration unchanged.
+
+Use `byoag_discover`, `byoag_begin_pairing`, and `byoag_complete_pairing` in that order. Prefer a protected code reference; pass `pairingCode` only after explaining that compatibility-mode tool arguments may be model-visible. A `confirmation-required` result means the user must approve in the platform UI before polling `byoag_complete_pairing` again without a code.
 
 ## Safety boundaries
 
