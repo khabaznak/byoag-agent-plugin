@@ -38,16 +38,22 @@
     "security": {
       "type": "object",
       "required": [
+        "profile",
         "pairwiseIdentity",
         "modelIsolatedSecrets",
         "declarativeRemoteSkills",
-        "nonInterference"
+        "nonInterference",
+        "signedDiscovery",
+        "proofOfPossession"
       ],
       "properties": {
+        "profile": { "const": "byoag-dpop+jws-0.1" },
         "pairwiseIdentity": { "const": true },
         "modelIsolatedSecrets": { "type": "boolean" },
         "declarativeRemoteSkills": { "const": true },
-        "nonInterference": { "const": true }
+        "nonInterference": { "const": true },
+        "signedDiscovery": { "const": true },
+        "proofOfPossession": { "const": "DPoP" }
       },
       "additionalProperties": false
     },

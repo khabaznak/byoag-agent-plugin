@@ -69,9 +69,9 @@
       "type": "object",
       "required": ["alg", "kid", "value"],
       "properties": {
-        "alg": { "type": "string", "minLength": 1 },
+        "alg": { "const": "EdDSA" },
         "kid": { "type": "string", "minLength": 1 },
-        "value": { "type": "string", "minLength": 1 }
+        "value": { "type": "string", "pattern": "^[A-Za-z0-9_-]+\\.\\.[A-Za-z0-9_-]+$" }
       },
       "additionalProperties": false
     }

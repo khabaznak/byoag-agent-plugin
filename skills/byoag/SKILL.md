@@ -12,7 +12,7 @@ This package includes an experimental generic connector. It can establish a live
 ## Connection workflow
 
 1. Require the exact platform domain for first-time discovery. Resolve only `https://<domain>/.well-known/byoag.json`; brand-name search is not a trust anchor.
-2. Verify the discovery document, issuer, supported version, and endpoints before pairing. The current compatibility connector validates the advertised JWKS location but does not yet verify a signed descriptor; disclose that limitation when security posture matters.
+2. Verify the discovery document, issuer, supported version, endpoints, same-origin JWKS, and detached EdDSA signature before pairing.
 3. Prefer model-isolated secret entry. If the client supports compatibility mode only, explain that a one-time code may enter model context before asking the user to provide it.
 4. Use a new pairwise agent identity for each platform. Do not disclose a shared identity without explicit user consent.
 5. Let the platform present its role and permission controls. The user may narrow but never expand the platform grant.

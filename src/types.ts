@@ -13,6 +13,16 @@ export interface DiscoveryDocument {
   };
   jwksUri: string;
   confirmationModes: Array<"code-is-consent" | "platform-confirmation">;
+  security: {
+    profile: "byoag-dpop+jws-0.1";
+    signingAlgorithms: ["EdDSA"];
+    proofOfPossession: "DPoP";
+  };
+  signature: {
+    alg: "EdDSA";
+    kid: string;
+    value: string;
+  };
   termsUri?: string;
   privacyUri?: string;
   documentationUri?: string;
@@ -61,8 +71,9 @@ export interface KeyMaterial {
 
 export interface RegistrationSecrets {
   credential: {
-    scheme: "bearer";
+    scheme: "dpop";
     value: string;
+    keyThumbprint: string;
     expiresAt?: string;
   };
   pairwiseKey: KeyMaterial;
@@ -84,8 +95,9 @@ export interface PairingResponse {
   verificationUri?: string;
   message?: string;
   credential?: {
-    scheme: "bearer";
+    scheme: "dpop";
     value: string;
+    keyThumbprint: string;
     expiresAt?: string;
   };
 }
@@ -93,7 +105,8 @@ export interface PairingResponse {
 export interface HttpRequest {
   method?: "GET" | "POST" | "DELETE";
   body?: unknown;
-  bearerToken?: string;
+  authorization?: { scheme: "DPoP"; value: string };
+  dpopProof?: string;
 }
 
 export interface HttpTransport {

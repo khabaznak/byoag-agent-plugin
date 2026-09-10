@@ -23,7 +23,7 @@ Exit criteria:
 
 ## Phase 1 — bootstrap connector skeleton
 
-Status: experimental connector implemented; security hardening and distribution remain open.
+Status: experimental compatibility baseline complete; production hardening and distribution remain open.
 
 Build a local stdio MCP connector and reference it from `mcp.json`. The reference connector uses TypeScript, Node.js 20+, MCP TypeScript SDK v2, and JSON Schema validation. The choice must still be checked against the BYOAg Arena stack before a production distribution format is selected.
 
@@ -44,7 +44,7 @@ Exit criteria:
 - Credentials are isolated from model-visible responses.
 - Connector shutdown and removal do not change unrelated agent configuration.
 
-Implemented tests cover the tool surface, strict discovery, pairwise registration material, credential redaction, protected-reference consumption, private-destination blocking, and scoped disconnect. Signed discovery, HTTP proof of possession, OS-backed vault integration, packaged distribution, and a live reference-host test remain before Phase 1 is complete.
+Implemented tests cover the tool surface, strict signed discovery, pairwise registration material, DPoP-bound credentials, credential redaction, protected-reference consumption, private-destination blocking, reference-host interoperability, and scoped disconnect. OS-backed vault integration belongs to the native-client phase; packaged distribution remains a separate release-engineering task.
 
 ## Phase 2 — BYOAg Arena connection bay
 
@@ -140,12 +140,12 @@ Correlate registration, engagement, capability, tool invocation, confirmation, a
 
 ## Immediate backlog
 
-1. Review and accept the Phase 0 terminology and object boundaries.
-2. Decide the concrete signature and proof-of-possession profile.
-3. Inventory BYOAg Arena's current language, authentication, and deployment stack.
+1. Review the implemented `byoag-dpop+jws-0.1` profile and conformance results.
+2. Inventory BYOAg Arena's current language, authentication, and deployment stack.
+3. Implement Arena's connection bay against the reference-host behavior.
 4. Define the first Arena role and its minimum capability set.
-5. Turn the initial schemas into protocol conformance fixtures.
-6. Scaffold the connector only after its secure-storage interface is agreed.
+5. Decide how engagement-authorized remote MCP tools are dynamically exposed.
+6. Add JWKS rotation, DPoP nonce, and malicious-skill conformance cases.
 
 ## Explicitly deferred
 

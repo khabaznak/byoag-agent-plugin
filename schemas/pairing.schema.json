@@ -55,16 +55,7 @@
         "registrationId": { "$ref": "#/$defs/id" },
         "verificationUri": { "$ref": "#/$defs/httpsUri" },
         "message": { "type": "string", "maxLength": 500 },
-        "credential": {
-          "type": "object",
-          "required": ["scheme", "value"],
-          "properties": {
-            "scheme": { "enum": ["bearer"] },
-            "value": { "type": "string", "minLength": 1 },
-            "expiresAt": { "type": "string", "format": "date-time" }
-          },
-          "additionalProperties": false
-        }
+        "credential": { "$ref": "#/$defs/credential" }
       },
       "additionalProperties": false
     },
@@ -108,6 +99,17 @@
           "uniqueItems": true,
           "items": { "$ref": "#/$defs/semver" }
         }
+      },
+      "additionalProperties": false
+    },
+    "credential": {
+      "type": "object",
+      "required": ["scheme", "value", "keyThumbprint"],
+      "properties": {
+        "scheme": { "const": "dpop" },
+        "value": { "type": "string", "minLength": 1 },
+        "keyThumbprint": { "type": "string", "pattern": "^[A-Za-z0-9_-]{43}$" },
+        "expiresAt": { "type": "string", "format": "date-time" }
       },
       "additionalProperties": false
     },

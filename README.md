@@ -8,7 +8,7 @@ BYOAg Arena is the first reference platform for the protocol and implementation.
 
 ## Current status
 
-This repository now contains an experimental generic connector at `0.1.0`. It implements domain-bound discovery, pairing, local pairwise identities, registration listing, engagement retrieval, and disconnect over a local stdio MCP server. It remains a development implementation: the protocol is not finalized, the compatibility vault is not an OS-backed secure store, and proof of possession and signed discovery are not yet implemented.
+This repository contains an experimental generic connector and an in-memory reference host at `0.1.0`. It implements signed domain-bound discovery, DPoP-protected pairing, local pairwise identities, registration listing, signed engagement retrieval, revocation, and disconnect. It remains a development implementation: the protocol is not finalized, the compatibility vault is not an OS-backed secure store, and the reference host is not production infrastructure.
 
 ## Build and test
 
@@ -19,6 +19,8 @@ npm install
 npm test
 npm run build
 ```
+
+Run only the black-box protocol suite with `npm run conformance`. Run the loopback reference host manually with `npm run reference-host`.
 
 `mcp.json` launches `node ${PLUGIN_ROOT}/dist/src/index.js` and stores connector state beneath `${PLUGIN_DATA}/byoag`. A source checkout must therefore be built before it is loaded as an Agent Plugin. Packaged distribution automation is not yet included.
 
@@ -44,6 +46,9 @@ The command reads without echo and returns an opaque, single-use reference for `
 - [Architecture](docs/architecture.md)
 - [Protocol flows](docs/protocol-flows.md)
 - [Connector HTTP binding](docs/connector-http-binding.md)
+- [BYOAg 0.1 cryptographic profile](docs/security-profile.md)
+- [Reference host](docs/reference-host.md)
+- [Conformance suite](docs/conformance.md)
 - [Permissions and capabilities](docs/permissions-and-capabilities.md)
 - [Security and privacy](docs/security.md)
 - [`ai.byoag` extension proposal](docs/byoag-extension.md)

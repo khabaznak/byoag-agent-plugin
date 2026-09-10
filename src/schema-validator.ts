@@ -14,6 +14,7 @@ const SCHEMA_FILES = [
   "engagement.schema.json",
   "discovery.schema.json",
   "pairing.schema.json",
+  "jwks.schema.json",
 ] as const;
 
 export class SchemaValidator {

@@ -23,6 +23,7 @@ The repository owner is the creator and steward of the BYOAg pattern, website, a
 - `byoag.json` declares the draft `ai.byoag` bootstrap extension.
 - `src/` contains the generic connector and MCP runtime.
 - `tests/` contains protocol, storage, and MCP integration coverage.
+- `src/reference-host/` is the in-memory, loopback-only protocol test host; it is not a production application template.
 - `skills/byoag/SKILL.md` is the entry point for the BYOAG skill.
 - `skills/byoag/references/` contains focused reference material used by the skill.
 - `docs/` contains the protocol architecture, threat model, extension proposal, implementation plan, and diagrams.

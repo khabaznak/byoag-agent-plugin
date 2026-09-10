@@ -135,7 +135,9 @@ Audit records should include capability, concrete tool, policy decision, idempot
 
 ## Open security work
 
-- Select concrete signature and proof-of-possession algorithms.
+- Obtain independent review of the experimental EdDSA/JWS/JCS/DPoP profile.
+- Add DPoP server nonces, bounded replay-cache expiration, and safe retry semantics.
+- Test JWKS rotation, refresh-on-unknown-key, and emergency signing-key revocation.
 - Define key rotation, recovery, and device replacement profiles.
 - Specify secure storage requirements across supported clients.
 - Define redaction requirements for telemetry and audit export.

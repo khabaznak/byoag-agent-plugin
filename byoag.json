@@ -9,13 +9,17 @@
     "loopbackHttpAllowed": false
   },
   "security": {
+    "profile": "byoag-dpop+jws-0.1",
     "pairwiseIdentity": true,
     "modelIsolatedSecrets": false,
     "declarativeRemoteSkills": true,
-    "nonInterference": true
+    "nonInterference": true,
+    "signedDiscovery": true,
+    "proofOfPossession": "DPoP"
   },
   "schemas": {
     "discovery": "./schemas/discovery.schema.json",
+    "jwks": "./schemas/jwks.schema.json",
     "pairing": "./schemas/pairing.schema.json",
     "engagement": "./schemas/engagement.schema.json",
     "delegation": "./schemas/delegation.schema.json",

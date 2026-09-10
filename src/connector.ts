@@ -1,5 +1,6 @@
 import { randomUUID } from "node:crypto";
 
+import { createDpopProof, jwkThumbprint, verifyDocumentSignature, type SignedDocument } from "./crypto.js";
 import { ByoagError } from "./errors.js";
 import { DomainPolicy } from "./domain.js";
 import { generatePendingIdentity } from "./identity.js";
@@ -58,6 +59,9 @@ export class ByoagConnector {
         throw new ByoagError("issuer_mismatch", "Cross-origin BYOAg endpoints are not supported by this bootstrap profile.");
       }
     }
+    const jwks = await this.http.requestJson(new URL(discovery.jwksUri));
+    this.schemas.assertValid("jwks.schema.json", jwks, "discovery_invalid");
+    verifyDocumentSignature(discovery as unknown as SignedDocument, (jwks as { keys: JsonWebKey[] }).keys, "byoag-discovery+jws");
     return discovery;
   }
 
@@ -120,8 +124,10 @@ export class ByoagConnector {
 
     let responseValue: unknown;
     if (connection.status === "confirmation-required" && !input.pairingCode && !input.protectedCodeReference) {
-      responseValue = await this.http.requestJson(new URL(connection.discovery.endpoints.pairing), {
+      const pairingUrl = new URL(connection.discovery.endpoints.pairing);
+      responseValue = await this.http.requestJson(pairingUrl, {
         method: "POST",
+        dpopProof: createDpopProof("POST", pairingUrl, identity.installationKey.privateKey),
         body: {
           action: "status",
           protocolVersion: PROTOCOL_VERSION,
@@ -136,8 +142,10 @@ export class ByoagConnector {
       const pairingCode = input.protectedCodeReference
         ? await this.vault.consumeOneTimeSecret(input.protectedCodeReference)
         : input.pairingCode!;
-      responseValue = await this.http.requestJson(new URL(connection.discovery.endpoints.pairing), {
+      const pairingUrl = new URL(connection.discovery.endpoints.pairing);
+      responseValue = await this.http.requestJson(pairingUrl, {
         method: "POST",
+        dpopProof: createDpopProof("POST", pairingUrl, identity.installationKey.privateKey),
         body: {
           action: "complete",
           protocolVersion: PROTOCOL_VERSION,
@@ -177,6 +185,9 @@ export class ByoagConnector {
     if (response.status === "denied") throw new ByoagError("pairing_code_invalid", "The platform denied the pairing request.");
     if (response.status !== "registered" || !response.registrationId || !response.credential) {
       throw new ByoagError("platform_error", "The platform returned an incomplete registration.");
+    }
+    if (response.credential.keyThumbprint !== jwkThumbprint(identity.installationKey.publicKey)) {
+      throw new ByoagError("proof_of_possession_failed", "The registration credential is bound to a different installation key.");
     }
 
     const registrationId = randomUUID();
@@ -221,7 +232,11 @@ export class ByoagConnector {
     if (!secrets) throw new ByoagError("credential_unavailable", "The registration credential is unavailable.");
     const url = new URL(registration.discovery.endpoints.engagements);
     url.searchParams.set("registrationId", registration.remoteRegistrationId);
-    const value = await this.http.requestJson(url, { bearerToken: secrets.credential.value });
+    const proof = createDpopProof("GET", url, secrets.installationKey.privateKey, secrets.credential.value);
+    const value = await this.http.requestJson(url, {
+      authorization: { scheme: "DPoP", value: secrets.credential.value },
+      dpopProof: proof,
+    });
     if (!isRecord(value) || !Array.isArray(value.engagements)) {
       throw new ByoagError("engagement_invalid", "The platform returned an invalid engagement list.");
     }
@@ -230,6 +245,13 @@ export class ByoagConnector {
       if ((engagement as { registrationId?: string }).registrationId !== registration.remoteRegistrationId) {
         throw new ByoagError("engagement_invalid", "An engagement is bound to a different registration.");
       }
+    }
+    const jwks = await this.http.requestJson(new URL(registration.discovery.jwksUri));
+    this.schemas.assertValid("jwks.schema.json", jwks, "engagement_invalid");
+    for (const engagement of value.engagements) {
+      const keys = (jwks as { keys: JsonWebKey[] }).keys;
+      verifyDocumentSignature(engagement as SignedDocument, keys, "byoag-engagement+jws");
+      verifyDocumentSignature((engagement as { delegation: SignedDocument }).delegation, keys, "byoag-delegation+jws");
     }
     return { registrationId, engagements: value.engagements };
   }
@@ -240,7 +262,12 @@ export class ByoagConnector {
     const secrets = await this.vault.getRegistration(registrationId);
     if (!secrets) throw new ByoagError("credential_unavailable", "The registration credential is unavailable.");
     const endpoint = appendPath(registration.discovery.endpoints.registrations, registration.remoteRegistrationId);
-    await this.http.requestJson(endpoint, { method: "DELETE", bearerToken: secrets.credential.value });
+    const proof = createDpopProof("DELETE", endpoint, secrets.installationKey.privateKey, secrets.credential.value);
+    await this.http.requestJson(endpoint, {
+      method: "DELETE",
+      authorization: { scheme: "DPoP", value: secrets.credential.value },
+      dpopProof: proof,
+    });
     await this.vault.deleteRegistration(registrationId);
     await this.state.update((state) => { delete state.registrations[registrationId]; });
     return { registrationId, status: "disconnected" };

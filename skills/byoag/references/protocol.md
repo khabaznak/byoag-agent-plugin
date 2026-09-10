@@ -6,6 +6,7 @@ BYOAg is an experimental protocol for bringing a user-controlled agent into an e
 
 - First-time discovery begins at `https://<domain>/.well-known/byoag.json`.
 - The exact domain is the trust anchor; a brand name or search result is not.
+- Protocol documents use the experimental `byoag-dpop+jws-0.1` profile: same-origin JWKS, detached EdDSA JWS signatures, and DPoP-bound registration credentials.
 - Pairing codes are short-lived, single-use, rate-limited, and separate from URLs.
 - Full-conformance clients keep pairing codes, private keys, and credentials outside model context.
 - Each platform receives a different pairwise agent identifier by default.
@@ -38,5 +39,6 @@ Registration, engagement, and credential lifetimes are platform-defined. Permiss
 - [Implemented connector HTTP binding](../../../docs/connector-http-binding.md)
 - [Permissions and capabilities](../../../docs/permissions-and-capabilities.md)
 - [Security](../../../docs/security.md)
+- [BYOAg 0.1 cryptographic profile](../../../docs/security-profile.md)
 - [`ai.byoag` extension](../../../docs/byoag-extension.md)
 - [Draft schemas](../../../schemas/)

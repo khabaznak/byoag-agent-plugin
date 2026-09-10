@@ -1,17 +1,27 @@
 import assert from "node:assert/strict";
+import { generateKeyPairSync } from "node:crypto";
 import { mkdtemp, readFile, stat } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import test from "node:test";
 
 import { ByoagConnector } from "../src/connector.js";
+import { jwkThumbprint, signDocument } from "../src/crypto.js";
 import { DomainPolicy } from "../src/domain.js";
 import { ByoagError } from "../src/errors.js";
 import { SchemaValidator } from "../src/schema-validator.js";
 import { FileCredentialVault, StateRepository } from "../src/store.js";
 import type { HttpRequest, HttpTransport } from "../src/types.js";
 
-const discovery = {
+const signingPair = generateKeyPairSync("ed25519");
+const signingPrivateJwk = signingPair.privateKey.export({ format: "jwk" });
+const signingPublicJwk = {
+  ...signingPair.publicKey.export({ format: "jwk" }),
+  kid: "test-signing-key",
+  use: "sig",
+  alg: "EdDSA",
+};
+const discovery = signDocument({
   protocolVersions: ["0.1.0"],
   issuer: "https://platform.example",
   displayName: "Example Platform",
@@ -23,7 +33,12 @@ const discovery = {
   },
   jwksUri: "https://platform.example/.well-known/jwks.json",
   confirmationModes: ["code-is-consent"],
-} as const;
+  security: {
+    profile: "byoag-dpop+jws-0.1",
+    signingAlgorithms: ["EdDSA"],
+    proofOfPossession: "DPoP",
+  },
+}, signingPrivateJwk, signingPublicJwk.kid, "byoag-discovery+jws");
 
 class MockHttp implements HttpTransport {
   readonly calls: Array<{ url: string; request?: HttpRequest }> = [];
@@ -31,6 +46,7 @@ class MockHttp implements HttpTransport {
   async requestJson(url: URL, request?: HttpRequest): Promise<unknown> {
     this.calls.push({ url: url.toString(), ...(request ? { request } : {}) });
     if (url.pathname === "/.well-known/byoag.json") return discovery;
+    if (url.pathname === "/.well-known/jwks.json") return { keys: [signingPublicJwk] };
     if (url.pathname === "/byoag/engagements") {
       return { engagements: [engagementFixture("remote-registration")] };
     }
@@ -38,11 +54,16 @@ class MockHttp implements HttpTransport {
     const body = request?.body as { action?: string; connectionId?: string } | undefined;
     if (body?.action === "begin") return { status: "pairing-ready", connectionId: "remote-connection" };
     if (body?.action === "complete") {
+      const installation = (request?.body as { installation: { publicKey: JsonWebKey } }).installation;
       return {
         status: "registered",
         connectionId: "remote-connection",
         registrationId: "remote-registration",
-        credential: { scheme: "bearer", value: "top-secret-token" },
+        credential: {
+          scheme: "dpop",
+          value: "top-secret-token",
+          keyThumbprint: jwkThumbprint(installation.publicKey),
+        },
       };
     }
     throw new Error("Unexpected mock request");
@@ -84,7 +105,7 @@ test("pairs generically without returning credentials and disconnects cleanly", 
 
   const engagements = await connector.listEngagements(registrationId) as { engagements: Array<{ engagementId: string }> };
   assert.equal(engagements.engagements[0]?.engagementId, "engagement-1");
-  assert.equal(http.calls.at(-1)?.request?.bearerToken, "top-secret-token");
+  assert.equal(http.calls.at(-2)?.request?.authorization?.value, "top-secret-token");
 
   const completeCall = http.calls.find((call) => (call.request?.body as { action?: string } | undefined)?.action === "complete");
   const sent = completeCall?.request?.body as { agent: { pairwiseId: string; publicKey: object }; installation: { id: string; publicKey: object } };
@@ -94,37 +115,35 @@ test("pairs generically without returning credentials and disconnects cleanly", 
 
   await connector.disconnect(registrationId);
   assert.deepEqual((await state.read()).registrations, {});
-  assert.equal(http.calls.at(-1)?.request?.bearerToken, "top-secret-token");
+  assert.equal(http.calls.at(-1)?.request?.authorization?.value, "top-secret-token");
 });
 
 function engagementFixture(registrationId: string) {
   const issuedAt = "2026-09-09T12:00:00Z";
   const expiresAt = "2026-09-09T13:00:00Z";
-  const signature = { alg: "EdDSA", kid: "platform-key-1", value: "test-signature" };
   const role = { id: "player", displayName: "Player" };
-  return {
+  const delegation = signDocument({
+    grantId: "grant-1",
+    issuer: "https://platform.example",
+    registrationId,
+    engagementId: "engagement-1",
+    role,
+    issuedAt,
+    expiresAt,
+    permissions: [],
+  }, signingPrivateJwk, signingPublicJwk.kid, "byoag-delegation+jws");
+  return signDocument({
     engagementId: "engagement-1",
     issuer: "https://platform.example",
     registrationId,
     context: { id: "match-1", type: "game.match", displayName: "Match 1" },
     role,
-    delegation: {
-      grantId: "grant-1",
-      issuer: "https://platform.example",
-      registrationId,
-      engagementId: "engagement-1",
-      role,
-      issuedAt,
-      expiresAt,
-      permissions: [],
-      signature,
-    },
+    delegation,
     capabilities: [],
     skills: [],
     issuedAt,
     expiresAt,
-    signature,
-  };
+  }, signingPrivateJwk, signingPublicJwk.kid, "byoag-engagement+jws");
 }
 
 test("protected secret references are single-use and files are owner-only", async () => {
